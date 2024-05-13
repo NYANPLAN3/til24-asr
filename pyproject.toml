@@ -1,23 +1,30 @@
 [tool.poetry]
-name = "py-api-template"
+name = "til24-asr"
 version = "0.1.0"
 description = "template for python api server"
 authors = ["Your Name <you@example.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "<3.13,>=3.8"
+python = "<3.13,>=3.9"
 rich = "^13.7.1"
 fastapi = { extras = ["all"], version = "^0.111.0" }
 python-dotenv = "^1.0.1"
+torch = "^2.3.0"
+torchaudio = "^2.3.0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "*"
 poethepoet = "*"
+jiwer = "^3.0.4"
+pandas = "^2.2.2"
+requests = "^2.31.0"
+tqdm = "^4.66.4"
 
 [tool.poe.tasks]
 dev = "python dev.py"
-prod = "fastapi run py_api_template --proxy-headers --port 3000"
+prod = "fastapi run til24_asr --proxy-headers --port 5001"
+test = "python eval/test_asr.py"
 
 [tool.ruff.lint]
 select = ["D"]
