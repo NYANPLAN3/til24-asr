@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 
 from .ASRManager import ASRManager
-from .types import STTRequest
+from .structs import STTRequest
 
 __all__ = ["app"]
 
