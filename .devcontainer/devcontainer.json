@@ -13,7 +13,9 @@
       "toolsToInstall": "poetry",
       "version": "3.11"
     },
-    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+    "ghcr.io/joshuanianji/devcontainer-features/gcloud-cli-persistence:1": {},
+    "ghcr.io/dhoeric/features/google-cloud-cli:1": {}
   },
 
   "customizations": {
@@ -39,6 +41,11 @@
       "type": "volume",
       "source": "apt-cache",
       "target": "/var/cache/apt"
+    },
+    {
+      "type": "volume",
+      "source": "til24-gcsfuse-cache",
+      "target": "/home/vscode/.cache/gcsfuse"
     }
   ],
 
