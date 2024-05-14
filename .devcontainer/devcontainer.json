@@ -46,6 +46,11 @@
       "type": "volume",
       "source": "til24-gcsfuse-cache",
       "target": "/home/vscode/.cache/gcsfuse"
+    },
+    {
+      "type": "volume",
+      "source": "whisper-cache",
+      "target": "/home/vscode/.cache/whisper"
     }
   ],
 
