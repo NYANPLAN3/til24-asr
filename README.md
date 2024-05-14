@@ -30,7 +30,7 @@ Note that the above example is in `mp4` format as GitHub does not support embedd
 
 ## Output
 
-Transcription of audio file. Example: `"Heading is one five zero, target is green commercial aircraft, tool to deploy is electromagnetic pulse."`
+Transcription of audio file. Example: `"Heading is one five zero, target is green commercial aircraft, tool to deploy is electromagnetic pulse."`. For ASR, the server port must be 5001.
 
 ## Useful Commands
 
