@@ -34,15 +34,15 @@ Transcription of audio file. Example: `"Heading is one five zero, target is gree
 
 ## Useful Commands
 
+The venv auto-activates, so these work.
+
 ```sh
-# The venv auto-activates, so these work.
-poe prod # Launch "production" server.
-poe dev # Launch debugging server, use VSCode's debug task instead by pressing F5.
-poe test # Run test stolen from the official competition template repo.
-
+# Launch debugging server, use VSCode's debug task instead by pressing F5.
+poe dev
+# Run test stolen from the official competition template repo.
+poe test
 # Building docker image for deployment.
-docker build -f Dockerfile . -t nyanplan3-asr:latest -t nyanplan3-asr:0.1.0
-
-# Running FastAPI app (with GPU).
-docker run --rm --gpus all -p 5001:5001 nyanplan3-asr
+poe build {insert_version_like_0.1.0}
+# Run the docker image locally.
+poe prod
 ```
