@@ -13,23 +13,40 @@ log = logging.getLogger(__name__)
 def preload_shared_libs():
     """Preloading shared libs so other stuff can find them."""
     if sys.platform.startswith("linux"):
-        import nvidia.cublas
+        try:
+            # torch already has the hacks
+            import torch
 
-        # import nvidia.cuda_runtime
-        import nvidia.cudnn
+            torch.cuda.is_available()
+            return
+        except:
+            pass
 
-        ctypes.CDLL(
-            os.path.join(nvidia.cublas.__path__[0], "lib", "libcublas.so.12"),
-            mode=ctypes.RTLD_GLOBAL,
-        )
+        try:
+            import nvidia.cublas
+
+            ctypes.CDLL(
+                os.path.join(nvidia.cublas.__path__[0], "lib", "libcublas.so.12"),
+                mode=ctypes.RTLD_GLOBAL,
+            )
+        except:
+            pass
+        
+        try:
+            import nvidia.cudnn
+            
+            ctypes.CDLL(
+                os.path.join(nvidia.cudnn.__path__[0], "lib", "libcudnn.so.8"),
+                mode=ctypes.RTLD_GLOBAL,
+            )
+        except:
+            pass
+
+        # import nvidia.cuda_runtime        
         # ctypes.CDLL(
         #     os.path.join(nvidia.cuda_runtime.__path__[0], "lib", "libcudart.so.12"),
         #     mode=ctypes.RTLD_GLOBAL,
         # )
-        ctypes.CDLL(
-            os.path.join(nvidia.cudnn.__path__[0], "lib", "libcudnn.so.8"),
-            mode=ctypes.RTLD_GLOBAL,
-        )
 
         log.warn("Linux hacks loaded.")
 

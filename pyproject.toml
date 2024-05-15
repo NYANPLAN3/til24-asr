@@ -12,9 +12,6 @@ fastapi = { extras = ["all"], version = "^0.111.0" }
 python-dotenv = "^1.0.1"
 librosa = "^0.10.2.post1"
 faster-whisper = "^1.0.2"
-nvidia-cudnn-cu12 = "8.*"
-nvidia-cuda-nvrtc-cu12 = "12.1.*"
-nvidia-cublas-cu12 = "12.1.*"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "*"
@@ -23,6 +20,9 @@ jiwer = "^3.0.4"
 pandas = "^2.2.2"
 requests = "^2.31.0"
 tqdm = "^4.66.4"
+nvidia-cudnn-cu12 = "8.*"
+nvidia-cuda-nvrtc-cu12 = "12.1.*"
+nvidia-cublas-cu12 = "12.1.*"
 
 [tool.poe.tasks]
 dev = "python dev.py"
