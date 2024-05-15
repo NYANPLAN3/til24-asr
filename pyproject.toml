@@ -27,9 +27,15 @@ tqdm = "^4.66.4"
 dev = "python dev.py"
 prod = "docker run --rm --gpus all -p 5001:5001 nyanplan3-asr"
 test = "python eval/test_asr.py"
+publish = "docker push asia-southeast1-docker.pkg.dev/dsta-angelhack/repository-nyanplan3/nyanplan3-asr:latest"
 
 [tool.poe.tasks.build]
-cmd = "docker build -f Dockerfile . -t nyanplan3-asr:latest -t nyanplan3-asr:${tag}"
+cmd = """docker build -f Dockerfile . \
+  -t nyanplan3-asr:latest \
+  -t asia-southeast1-docker.pkg.dev/dsta-angelhack/repository-nyanplan3/nyanplan3-asr:latest \
+  -t nyanplan3-asr:${tag} \
+  -t asia-southeast1-docker.pkg.dev/dsta-angelhack/repository-nyanplan3/nyanplan3-asr:${tag} \
+"""
 args = [{ name = "tag", positional = true, required = true }]
 
 [tool.ruff.lint]
