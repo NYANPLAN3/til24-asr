@@ -15,9 +15,11 @@ class ASRManager:
         """Initialize ASRManager models & stuff."""
         # self.model = whisper.load_model("./models/large-v3.pt")
         self.model = WhisperModel(
-            "Systran/faster-distil-whisper-large-v3",
+            "./models/Systran_faster-distil-whisper-large-v3",
             device="cuda",
             # compute_type="int8_float16",
+            compute_type="default",
+            local_files_only=True,
         )
         self.options = dict(
             language="en",
@@ -44,7 +46,7 @@ class ASRManager:
 
         # Do transcription
         segments, _ = self.model.transcribe(audio_waveform, **self.options)
-        segments = list(segments)
-        text = segments[0].text
+        # NOTE: we assume input doesn't exceed model context window
+        text = next(segments).text
 
         return text
