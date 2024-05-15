@@ -51,7 +51,7 @@ def main():
 
 
 def run_batched(
-    instances: List[Dict[str, str | int]], batch_size: int = 4
+    instances: List[Dict[str, str | int]], batch_size: int = 1
 ) -> List[Dict[str, str | int]]:
     # split into batches
     results = []
@@ -69,16 +69,15 @@ def run_batched(
             ),
         )
         _results = response.json()["predictions"]
-        results.extend(
-            [
+        for i in range(len(_instances)):
+            tqdm.write(f'Pred: {_results[i]}, True: {_instances[i]["transcript"]}')
+            results.append(
                 {
                     "key": _instances[i]["key"],
                     "transcript": _instances[i]["transcript"],
                     "prediction": _results[i],
                 }
-                for i in range(len(_instances))
-            ]
-        )
+            )
     return results
 
 
