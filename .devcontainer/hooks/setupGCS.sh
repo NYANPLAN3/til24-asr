@@ -12,8 +12,11 @@ curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo tee /usr/share
 sudo apt-get update
 sudo apt-get install -y gcsfuse
 
-echo "Authenticating GCloud, user input is required!"
-gcloud init --no-launch-browser
+if [ ! -d "$HOME/.config/gcloud" ]; then
+  echo "Authenticating GCloud, user input is required!"
+  gcloud init --no-launch-browser
+  gcloud auth application-default login
+fi
 
 echo "Mounting GCSFuse!"
 
@@ -22,9 +25,10 @@ mkdir -p $team_bucket_dir
 mkdir -p $nsc_bucket_dir
 
 echo user_allow_other | sudo tee -a /etc/fuse.conf > /dev/null
-gcsfuse --config-file $gcsfuse_conf -o ro,allow_other,implicit_dirs,uid=1000,gid=1001,_netdev til-ai-24-advanced $track_bucket_dir
-gcsfuse --config-file $gcsfuse_conf -o rw,allow_other,implicit_dirs,uid=1000,gid=1001,_netdev nyanplan3-til-ai-24 $team_bucket_dir
-gcsfuse --config-file $gcsfuse_conf -o ro,allow_other,implicit_dirs,uid=1000,gid=1001,_netdev til-ai-24-data $nsc_bucket_dir
+echo til-ai-24-advanced $track_bucket_dir gcsfuse config_file=$gcsfuse_conf,ro,allow_other,implicit_dirs,uid=1000,gid=1000,_netdev | sudo tee -a /etc/fstab
+echo nyanplan3-til-ai-24 $team_bucket_dir gcsfuse config_file=$gcsfuse_conf,rw,allow_other,implicit_dirs,uid=1000,gid=1000,_netdev | sudo tee -a /etc/fstab
+echo til-ai-24-data $nsc_bucket_dir gcsfuse config_file=$gcsfuse_conf,ro,allow_other,implicit_dirs,uid=1000,gid=1000,_netdev | sudo tee -a /etc/fstab
+mount -a
 
 echo "Configuring Docker Artifact Registry!"
 

@@ -51,8 +51,11 @@
       "type": "volume",
       "source": "whisper-cache",
       "target": "/home/vscode/.cache/whisper"
-    }
+    },
+    { "type": "bind", "source": "/dev/fuse", "target": "/dev/fuse" }
   ],
+  
+  "privileged": true,
 
   // Use 'postCreateCommand' to run commands after the container is created.
   "postCreateCommand": ".devcontainer/hooks/postCreate.sh"

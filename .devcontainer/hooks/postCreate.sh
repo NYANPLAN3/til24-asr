@@ -8,5 +8,6 @@ poetry install
 
 sudo chown -R vscode:vscode /home/vscode/.cache/pypoetry
 sudo chown -R vscode:vscode /home/vscode/.cache/whisper
+sudo chown -R vscode:vscode /home/vscode/.cache/gcsfuse
 
-# /workspaces/til24-asr/.devcontainer/hooks/setupGCS.sh
+#/workspaces/til24-asr/.devcontainer/hooks/setupGCS.sh
