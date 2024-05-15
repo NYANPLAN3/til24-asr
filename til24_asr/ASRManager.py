@@ -5,6 +5,7 @@ import io
 import librosa
 import numpy as np
 import whisper
+from faster_whisper import WhisperModel
 
 
 class ASRManager:
@@ -12,7 +13,19 @@ class ASRManager:
 
     def __init__(self):
         """Initialize ASRManager models & stuff."""
-        self.model = whisper.load_model("./models/large-v3.pt")
+        # self.model = whisper.load_model("./models/large-v3.pt")
+        self.model = WhisperModel(
+            "large-v3", device="cuda", compute_type="int8_float16"
+        )
+        self.options = dict(
+            language="en",
+            compression_ratio_threshold=10.0,
+            log_prob_threshold=-10.0,
+            no_speech_threshold=1.0,
+            beam_size=5,
+            patience=1,
+            without_timestamps=True,
+        )
 
     async def transcribe(self, wav: bytes) -> str:
         """Transcribe audio bytes to text."""
@@ -28,6 +41,6 @@ class ASRManager:
         audio_waveform = np.array(audio_waveform, dtype=np.float32)
 
         # Do transcription
-        result = self.model.transcribe(audio_waveform)
+        result = self.model.transcribe(audio_waveform, **self.options)
 
         return result["text"]
