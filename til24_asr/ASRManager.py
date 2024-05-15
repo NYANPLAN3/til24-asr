@@ -4,7 +4,8 @@ import io
 
 import librosa
 import numpy as np
-import whisper
+
+# import whisper
 from faster_whisper import WhisperModel
 
 

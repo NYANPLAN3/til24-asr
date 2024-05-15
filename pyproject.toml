@@ -10,11 +10,9 @@ python = "<3.13,>=3.9"
 rich = "^13.7.1"
 fastapi = { extras = ["all"], version = "^0.111.0" }
 python-dotenv = "^1.0.1"
-torch = "^2.3.0"
-torchaudio = "^2.3.0"
-openai-whisper = "^20231117"
 librosa = "^0.10.2.post1"
 faster-whisper = "^1.0.2"
+nvidia-cudnn-cu12 = "^8"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "*"

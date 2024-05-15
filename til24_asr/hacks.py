@@ -14,17 +14,18 @@ def preload_shared_libs():
     """Preloading shared libs so other stuff can find them."""
     if sys.platform.startswith("linux"):
         import nvidia.cublas
-        import nvidia.cuda_runtime
+
+        # import nvidia.cuda_runtime
         import nvidia.cudnn
 
         ctypes.CDLL(
             os.path.join(nvidia.cublas.__path__[0], "lib", "libcublas.so.12"),
             mode=ctypes.RTLD_GLOBAL,
         )
-        ctypes.CDLL(
-            os.path.join(nvidia.cuda_runtime.__path__[0], "lib", "libcudart.so.12"),
-            mode=ctypes.RTLD_GLOBAL,
-        )
+        # ctypes.CDLL(
+        #     os.path.join(nvidia.cuda_runtime.__path__[0], "lib", "libcudart.so.12"),
+        #     mode=ctypes.RTLD_GLOBAL,
+        # )
         ctypes.CDLL(
             os.path.join(nvidia.cudnn.__path__[0], "lib", "libcudnn.so.8"),
             mode=ctypes.RTLD_GLOBAL,

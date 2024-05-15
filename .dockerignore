@@ -4,5 +4,7 @@
 .devcontainer
 .vscode
 results
+
 models
-!models/large-v3.pt
+#!models/large-v3.pt
+!models/Systran_faster-distil-whisper-large-v3
