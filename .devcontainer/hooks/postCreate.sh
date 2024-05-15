@@ -7,7 +7,7 @@ poetry config virtualenvs.prompt venv
 poetry install
 
 sudo chown -R vscode:vscode /home/vscode/.cache/pypoetry
-sudo chown -R vscode:vscode /home/vscode/.cache/whisper
 sudo chown -R vscode:vscode /home/vscode/.cache/gcsfuse
+sudo chown -R vscode:vscode /home/vscode/.cache/whisper
 
 #/workspaces/til24-asr/.devcontainer/hooks/setupGCS.sh

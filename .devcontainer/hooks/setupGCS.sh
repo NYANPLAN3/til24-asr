@@ -12,9 +12,8 @@ curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo tee /usr/share
 sudo apt-get update
 sudo apt-get install -y gcsfuse
 
-if [ ! -d "$HOME/.config/gcloud" ]; then
+if [ ! -f "$HOME/.config/gcloud/application_default_credentials.json" ]; then
   echo "Authenticating GCloud, user input is required!"
-  gcloud init --no-launch-browser
   gcloud auth application-default login
 fi
 
