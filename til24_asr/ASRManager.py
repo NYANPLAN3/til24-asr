@@ -12,7 +12,7 @@ class ASRManager:
 
     def __init__(self):
         """Initialize ASRManager models & stuff."""
-        self.model = whisper.load_model("large-v3")
+        self.model = whisper.load_model("./models/large-v3.pt")
 
     async def transcribe(self, wav: bytes) -> str:
         """Transcribe audio bytes to text."""

@@ -3,3 +3,6 @@
 .venv
 .devcontainer
 .vscode
+results
+models
+!models/large-v3.pt
