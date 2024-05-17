@@ -1,9 +1,13 @@
 """Main app."""
-
 import base64
 import logging
+#import enchant
 import os
+import re
 import sys
+
+from num2words import num2words
+#from enchant.checker import SpellChecker
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
@@ -50,6 +54,46 @@ async def health():
     """Competition admin needs this."""
     return {"message": "health ok"}
 
+"""def us_spelling_to_uk(text, checker = enchant.checker.SpellChecker("en_GB"), ignore_list = []):
+    checker.set_text(text)
+    for err in checker:
+        suggestions = err.suggest()
+        if err.word in ignore_list:
+            continue
+        if len(suggestions) < 1:
+            #print(err.word)
+            continue
+        # else: print(name, "W:", err.word, "\tC:", suggestions[0])
+        err.replace(suggestions[0])
+    return checker.get_text()
+"""
+    
+def process_output(output):
+
+    # Add a space between a digit and a letter / letter and a digit
+    output = re.sub(r'(?<=\d)(?=[a-zA-Z])', ' ', output)
+    output = re.sub(r'(?<=[a-zA-Z])(?=\d)', ' ', output)
+    output = re.sub(r'(?<=\d)(?=\d)', ' ', output)
+
+    # Add period at the end of text
+    output = re.sub(r'([^.,])([.,])$', r'\1.', output)
+    
+    # Numbers to words
+    output = re.sub(r'(\d+)', lambda m: num2words(int(m.group())), output)
+
+    output = re.sub(r'\b(nine)\b', r'niner', output, flags=re.IGNORECASE)
+    output = re.sub(r'\b(torret)\b', r'turret', output, flags=re.IGNORECASE)
+    # US English to UK English
+    #output = us_spelling_to_uk(output)
+
+    # Remove extra spaces 
+    output = re.sub(r' +', ' ', output)
+    output = output.strip()
+    
+    # Capitalize first letter
+    output = output[0].upper() + output[1:]
+
+    return output
 
 @app.post("/stt")
 async def stt(req: STTRequest):
@@ -63,6 +107,7 @@ async def stt(req: STTRequest):
 
         # TODO: Consider padding & stacking audio files for batch processing.
         text = await asr_manager.transcribe(wav)
+        text = process_output(text)
         preds.append(text)
 
     return {"predictions": preds}

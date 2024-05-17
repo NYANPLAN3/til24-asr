@@ -388,6 +388,16 @@ trio = ["trio (>=0.23)"]
 wmi = ["wmi (>=1.5.1)"]
 
 [[package]]
+name = "docopt"
+version = "0.6.2"
+description = "Pythonic argument parser, that will make you smile"
+optional = false
+python-versions = "*"
+files = [
+    {file = "docopt-0.6.2.tar.gz", hash = "sha256:49b3a825280bd66b3aa83585ef59c4a8c82f2c8a522dbe754a8bc8d08c85c491"},
+]
+
+[[package]]
 name = "email-validator"
 version = "2.1.1"
 description = "A robust email address syntax and deliverability validation library."
@@ -1031,6 +1041,20 @@ files = [
 ]
 
 [[package]]
+name = "num2words"
+version = "0.5.13"
+description = "Modules to convert numbers to words. Easily extensible."
+optional = false
+python-versions = "*"
+files = [
+    {file = "num2words-0.5.13-py3-none-any.whl", hash = "sha256:39e662c663f0a7e15415431ea68eb3dc711b49e3b776d93403e1da0a219ca4ee"},
+    {file = "num2words-0.5.13.tar.gz", hash = "sha256:a3064716fbbf90d75c449450cebfbc73a6a13e63b2531d09bdecc3ab1a2209cf"},
+]
+
+[package.dependencies]
+docopt = ">=0.6.2"
+
+[[package]]
 name = "numba"
 version = "0.59.1"
 description = "compiling Python code using LLVM"
@@ -1569,6 +1593,19 @@ python-dotenv = ">=0.21.0"
 [package.extras]
 toml = ["tomli (>=2.0.1)"]
 yaml = ["pyyaml (>=6.0.1)"]
+
+[[package]]
+name = "pyenchant"
+version = "3.2.2"
+description = "Python bindings for the Enchant spellchecking system"
+optional = false
+python-versions = ">=3.5"
+files = [
+    {file = "pyenchant-3.2.2-py3-none-any.whl", hash = "sha256:5facc821ece957208a81423af7d6ec7810dad29697cb0d77aae81e4e11c8e5a6"},
+    {file = "pyenchant-3.2.2-py3-none-win32.whl", hash = "sha256:5a636832987eaf26efe971968f4d1b78e81f62bca2bde0a9da210c7de43c3bce"},
+    {file = "pyenchant-3.2.2-py3-none-win_amd64.whl", hash = "sha256:6153f521852e23a5add923dbacfbf4bebbb8d70c4e4bad609a8e0f9faeb915d1"},
+    {file = "pyenchant-3.2.2.tar.gz", hash = "sha256:1cf830c6614362a78aab78d50eaf7c6c93831369c52e1bb64ffae1df0341e637"},
+]
 
 [[package]]
 name = "pygments"
@@ -2652,4 +2689,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "<3.13,>=3.9"
-content-hash = "cff12c45d9bfaf631164cbb02f17e5c51943dc072674f7603849486253ed9f74"
+content-hash = "0711230697d2dc1474cf0611c9d4c06d2106f9f8033bd69a19737758f88a5477"

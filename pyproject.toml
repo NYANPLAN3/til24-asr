@@ -12,6 +12,8 @@ fastapi = { extras = ["all"], version = "^0.111.0" }
 python-dotenv = "^1.0.1"
 librosa = "^0.10.2.post1"
 faster-whisper = "^1.0.2"
+num2words = "^0.5.13"
+pyenchant = "^3.2.2"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "*"
