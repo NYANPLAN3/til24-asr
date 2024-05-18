@@ -67,6 +67,10 @@ async def health():
         err.replace(suggestions[0])
     return checker.get_text()
 """
+def capitalize_start_of_sentence(text):
+    def capitalize_match(match):
+        return match.group(1) + match.group(2).upper()
+    return re.sub(r'(^|[.!?]\s+)([a-z])', capitalize_match, text)    
     
 def process_output(output):
 
@@ -77,23 +81,38 @@ def process_output(output):
 
     # Add period at the end of text
     output = re.sub(r'([^.,])([.,])$', r'\1.', output)
+    output = re.sub(r'(?<=\w)\.(?=\w)', ' ', output)
     
     # Numbers to words
     output = re.sub(r'(\d+)', lambda m: num2words(int(m.group())), output)
 
     output = re.sub(r'\b(nine)\b', r'niner', output, flags=re.IGNORECASE)
     output = re.sub(r'\b(torret)\b', r'turret', output, flags=re.IGNORECASE)
+    output = re.sub(r'\b(torrid)\b', r'turret', output, flags=re.IGNORECASE)
+    output = re.sub(r'\b(turrell)\b', r'turret', output, flags=re.IGNORECASE)
     output = re.sub(r'\b(engate)\b', r'engage', output, flags=re.IGNORECASE)
+    output = re.sub(r'\b(gray)\b', r'grey', output, flags=re.IGNORECASE)
+    output = re.sub(r'\b(intercepted)\b', r'interceptor', output, flags=re.IGNORECASE)
+    output = re.sub(r'\b(engaged)\b', r'engage', output, flags=re.IGNORECASE)
+    output = re.sub(r'\b(hostel)\b', r'hostile', output, flags=re.IGNORECASE)
+    output = re.sub(r'\b(Heading)\b', r'heading', output)
+    output = re.sub(r'\b(anterior)\b', r'anti-air', output, flags=re.IGNORECASE)
+    output = re.sub(r'\b(anti air)\b', r'anti-air', output, flags=re.IGNORECASE)
+    output = re.sub(r'\b(surface to air)\b', r'surface-to-air', output, flags=re.IGNORECASE)
+    
     # US English to UK English
     #output = us_spelling_to_uk(output)
 
+    
+    # Capitalize first letter
+    output = capitalize_start_of_sentence(output)
+    output = output[0].upper() + output[1:]
+
+    
     # Remove extra spaces 
     output = re.sub(r' +', ' ', output)
     output = output.strip()
     
-    # Capitalize first letter
-    output = output[0].upper() + output[1:]
-
     return output
 
 @app.post("/stt")
