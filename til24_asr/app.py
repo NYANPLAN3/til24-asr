@@ -106,12 +106,12 @@ def process_output(output):
     
     # Capitalize first letter
     output = capitalize_start_of_sentence(output)
-    output = output[0].upper() + output[1:]
 
     
     # Remove extra spaces 
     output = re.sub(r' +', ' ', output)
     output = output.strip()
+    output = output[0].upper() + output[1:]
     
     return output
 

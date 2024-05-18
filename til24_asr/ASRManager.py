@@ -15,7 +15,8 @@ class ASRManager:
     def __init__(self):
         """Initialize ASRManager models & stuff."""
         self.model = WhisperModel(
-            "./models/Systran_faster-distil-whisper-large-v3",
+            #"./models/Systran_faster-distil-whisper-large-v3",
+            "./models/whisper-large-v3-ct2",
             device="cuda",
             # compute_type="int8_float16",
             compute_type="default",
