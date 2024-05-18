@@ -83,6 +83,7 @@ def process_output(output):
 
     output = re.sub(r'\b(nine)\b', r'niner', output, flags=re.IGNORECASE)
     output = re.sub(r'\b(torret)\b', r'turret', output, flags=re.IGNORECASE)
+    output = re.sub(r'\b(engate)\b', r'engage', output, flags=re.IGNORECASE)
     # US English to UK English
     #output = us_spelling_to_uk(output)
 

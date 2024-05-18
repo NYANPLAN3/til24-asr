@@ -17,6 +17,7 @@ class ASRManager:
         # self.model = whisper.load_model("./models/large-v3.pt")
         self.model = WhisperModel(
             "./models/Systran_faster-distil-whisper-large-v3",
+            #"./models/whisper-large-v3-atco2-asr-atcosim",
             device="cuda",
             # compute_type="int8_float16",
             compute_type="default",
@@ -41,7 +42,19 @@ class ASRManager:
         audio_waveform, sr = librosa.load(
             byte_stream, sr=None
         )  # Preserve original sample rate
+            
+        # Resample the audio to 16000 Hz
+        target_sr = 16000
+        if sr != target_sr:
+            audio_waveform = librosa.resample(audio_waveform, orig_sr=sr, target_sr=target_sr)
 
+        # Convert to mono if needed
+        if audio_waveform.ndim > 1:
+            audio_waveform = np.mean(audio_waveform, axis=1)
+
+        # Normalize the audio
+        audio_waveform = audio_waveform / np.max(np.abs(audio_waveform))
+        
         # Audio waveform to a numpy array
         audio_waveform = np.array(audio_waveform, dtype=np.float32)
 
