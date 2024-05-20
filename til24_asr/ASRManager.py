@@ -15,7 +15,6 @@ class ASRManager:
     def __init__(self):
         """Initialize ASRManager models & stuff."""
         self.model = WhisperModel(
-            #"./models/Systran_faster-distil-whisper-large-v3",
             "./models/whisper-large-v3-ct2",
             device="cuda",
             # compute_type="int8_float16",
@@ -30,7 +29,7 @@ class ASRManager:
             beam_size=5,
             patience=1,
             without_timestamps=True,
-            initial_prompt = "Engage interceptor jets to intercept an orange commercial aircraft heading three one five. Control tower to turrets, deploy EMP on white fighter jet heading one niner five. Alfa, Echo, Mike Papa, deploy yellow drone with surface-to-air missiles. Alpha Bravo Charlie Mike Zulu Yankee"
+            initial_prompt = "Engage interceptor jets to intercept an orange commercial aircraft heading three one five. Control tower to turrets, deploy EMP on white fighter jet heading one niner five. Alfa, Echo, Mike Papa, deploy yellow drone with surface-to-air missiles. Alpha, deploy surface-to-air missiles at heading two five five. Engage the green, brown, and blue light aircraft. Stand by for further orders. Alpha, Bravo, Charlie, this is Control Tower. Deploy electromagnetic pulse at heading two six zero towards the black, purple, and orange drone. Target locked. Execute. Turret Alpha, engage green and orange commercial aircraft at heading zero niner zero with anti-air artillery. Turret Bravo, standby for further instructions."
         )
 
     async def transcribe(self, wav: bytes) -> str:
