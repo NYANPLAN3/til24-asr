@@ -7,9 +7,11 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "<3.13,>=3.9"
-rich = "^13.7.1"
-fastapi = { extras = ["all"], version = "^0.111.0" }
 python-dotenv = "^1.0.1"
+fastapi-slim = "^0.111.0"
+uvicorn = "^0.29.0"
+uvloop = "^0.19.0"
+httptools = "^0.6.1"
 librosa = "^0.10.2.post1"
 faster-whisper = "^1.0.2"
 num2words = "^0.5.13"
@@ -17,6 +19,7 @@ num2words = "^0.5.13"
 [tool.poetry.group.dev.dependencies]
 ruff = "*"
 poethepoet = "*"
+rich = "^13.7.1"
 jiwer = "^3.0.4"
 pandas = "^2.2.2"
 requests = "^2.31.0"
@@ -26,10 +29,11 @@ nvidia-cuda-nvrtc-cu12 = "12.1.*"
 nvidia-cublas-cu12 = "12.1.*"
 
 [tool.poe.tasks]
-dev = "python dev.py"
-prod = "docker run --rm --gpus all -p 5001:5001 nyanplan3-asr"
+dev = { cmd = "python dev.py", use_exec = true }
+prod = { cmd = "docker run --rm --gpus all -p 5001:5001 nyanplan3-asr", use_exec = true }
 test = "python eval/test_asr.py"
 publish = "docker push asia-southeast1-docker.pkg.dev/dsta-angelhack/repository-nyanplan3/nyanplan3-asr:latest"
+requirements = "poetry export -o requirements.txt --without-hashes"
 
 [tool.poe.tasks.build]
 cmd = """docker build -f Dockerfile . \
@@ -38,6 +42,7 @@ cmd = """docker build -f Dockerfile . \
   -t nyanplan3-asr:${tag} \
   -t asia-southeast1-docker.pkg.dev/dsta-angelhack/repository-nyanplan3/nyanplan3-asr:${tag} \
 """
+deps = ["requirements"]
 args = [{ name = "tag", positional = true, required = true }]
 
 [tool.ruff.lint]

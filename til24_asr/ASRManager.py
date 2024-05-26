@@ -29,7 +29,13 @@ class ASRManager:
             beam_size=5,
             patience=1,
             without_timestamps=True,
-            initial_prompt = "Engage interceptor jets to intercept an orange commercial aircraft heading three one five. Control tower to turrets, deploy EMP on white fighter jet heading one niner five. Alfa, Echo, Mike Papa, deploy yellow drone with surface-to-air missiles. Alpha, deploy surface-to-air missiles at heading two five five. Engage the green, brown, and blue light aircraft. Stand by for further orders. Alpha, Bravo, Charlie, this is Control Tower. Deploy electromagnetic pulse at heading two six zero towards the black, purple, and orange drone. Target locked. Execute. Turret Alpha, engage green and orange commercial aircraft at heading zero niner zero with anti-air artillery. Turret Bravo, standby for further instructions."
+            initial_prompt=(
+                "Engage interceptor jets to intercept an orange commercial aircraft heading three one five. "
+                "Control tower to turrets, deploy EMP on white fighter jet heading one niner five. "
+                "Alfa, Echo, Mike Papa, deploy yellow drone with surface-to-air missiles. Alpha, deploy surface-to-air missiles at heading two five five. "
+                "Alpha, Bravo, Charlie, this is Control Tower. Deploy electromagnetic pulse at heading two six zero towards the black, purple, and orange drone. Target locked. Execute. "
+                "Turret Alpha, engage green and orange commercial aircraft at heading zero niner zero with anti-air artillery. Turret Bravo, standby for further instructions. "
+            ),
         )
 
     async def transcribe(self, wav: bytes) -> str:
@@ -41,11 +47,13 @@ class ASRManager:
         audio_waveform, sr = librosa.load(
             byte_stream, sr=None
         )  # Preserve original sample rate
-            
+
         # Resample the audio to 16000 Hz
         target_sr = 16000
         if sr != target_sr:
-            audio_waveform = librosa.resample(audio_waveform, orig_sr=sr, target_sr=target_sr)
+            audio_waveform = librosa.resample(
+                audio_waveform, orig_sr=sr, target_sr=target_sr
+            )
 
         # Convert to mono if needed
         if audio_waveform.ndim > 1:
@@ -53,7 +61,7 @@ class ASRManager:
 
         # Normalize the audio
         audio_waveform = audio_waveform / np.max(np.abs(audio_waveform))
-        
+
         # Audio waveform to a numpy array
         audio_waveform = np.array(audio_waveform, dtype=np.float32)
 
@@ -62,4 +70,4 @@ class ASRManager:
         # NOTE: we assume input doesn't exceed model context window
         text = next(segments).text
 
-        return text
+        return text.strip()

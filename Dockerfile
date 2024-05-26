@@ -1,34 +1,35 @@
 # syntax=docker/dockerfile:1
-# NOTE: Docker's GPU support works for most images despite common misconceptions.
-#FROM python:3.11-slim-bookworm
-# Example of prebuilt pytorch image to save download time.
-#FROM pytorch/pytorch:2.3.0-cuda12.1-cudnn8-runtime
-FROM nvidia/cuda:12.1.1-cudnn8-runtime-ubuntu22.04
+
+ARG CUDA_VERSION=12.1.1
+
+FROM nvidia/cuda:${CUDA_VERSION}-base-ubuntu22.04 as deploy
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV PIP_ROOT_USER_ACTION=ignore
 
-WORKDIR /app
-
-# Cache packages to speed up builds, see: https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/reference.md#run---mounttypecache
-# Example:
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; \
   echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt,sharing=locked \
+  apt-get update && apt-get install -y --no-install-recommends \
+  libcudnn8 \
+  libcublas-12-1
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  --mount=type=cache,target=/var/lib/apt,sharing=locked \
   apt-get update && apt-get install -y --no-install-recommends python3-pip
+RUN --mount=type=cache,target=/root/.cache/pip,sharing=locked \
+  pip install -U pip
 
-# COPY should be from least changed to most frequently changed.
+WORKDIR /app
+
+COPY --link requirements.txt ./
+RUN --mount=type=cache,target=/root/.cache/pip,sharing=locked \
+  pip install -r requirements.txt
+
+COPY --link til24_asr ./til24_asr
 COPY --link models ./models
 
-COPY --link poetry.lock pyproject.toml README.md .
-RUN mkdir til24_asr && touch til24_asr/__init__.py
-RUN --mount=type=cache,target=/root/.cache/pip,sharing=locked \
-  pip install -U pip \
-  && pip install -e .
-  
-COPY --link til24_asr ./til24_asr
-
 EXPOSE 5001
-CMD ["fastapi", "run", "til24_asr", "--proxy-headers", "--port", "5001"]
+# uvicorn --host=0.0.0.0 --port=5001 --factory til24_asr:create_app
+CMD ["uvicorn", "--host=0.0.0.0", "--port=5001", "--factory", "til24_asr:create_app"]
