@@ -23,12 +23,13 @@ RUN --mount=type=cache,target=/root/.cache/pip,sharing=locked \
 
 WORKDIR /app
 
-COPY --link requirements.txt ./
+# Remember to regenerate requirements.txt!
+COPY --link requirements.txt .env ./
 RUN --mount=type=cache,target=/root/.cache/pip,sharing=locked \
   pip install -r requirements.txt
 
-COPY --link til24_asr ./til24_asr
 COPY --link models ./models
+COPY --link til24_asr ./til24_asr
 
 EXPOSE 5001
 # uvicorn --host=0.0.0.0 --port=5001 --factory til24_asr:create_app
