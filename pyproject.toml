@@ -32,7 +32,7 @@ nvidia-cublas-cu12 = "12.1.*"
 dev = { cmd = "python dev.py", use_exec = true }
 prod = { cmd = "docker run --rm --gpus all -p 5001:5001 nyanplan3-asr", use_exec = true }
 test = "python eval/test_asr.py"
-publish = "docker push asia-southeast1-docker.pkg.dev/dsta-angelhack/repository-nyanplan3/nyanplan3-asr:finals"
+publish = "docker push -a asia-southeast1-docker.pkg.dev/dsta-angelhack/repository-nyanplan3/nyanplan3-asr"
 requirements = "poetry export -o requirements.txt --without-hashes"
 
 [tool.poe.tasks.build]
