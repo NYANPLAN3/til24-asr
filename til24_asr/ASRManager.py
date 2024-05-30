@@ -44,29 +44,18 @@ class ASRManager:
         byte_stream = io.BytesIO(wav)
 
         # Byte stream to audio waveform
-        audio_waveform, sr = librosa.load(
-            byte_stream, sr=None
-        )  # Preserve original sample rate
-
-        # Resample the audio to 16000 Hz
-        target_sr = 16000
-        if sr != target_sr:
-            audio_waveform = librosa.resample(
-                audio_waveform, orig_sr=sr, target_sr=target_sr
-            )
-
-        # Convert to mono if needed
-        if audio_waveform.ndim > 1:
-            audio_waveform = np.mean(audio_waveform, axis=1)
+        # NOTE: This is better than what faster-whisper does if you pass an audio file directly
+        wav, _ = librosa.load(
+            byte_stream, sr=16000, mono=True, res_type="soxr_vhq"
+        )
 
         # Normalize the audio
-        audio_waveform = audio_waveform / np.max(np.abs(audio_waveform))
-
-        # Audio waveform to a numpy array
-        audio_waveform = np.array(audio_waveform, dtype=np.float32)
+        # https://github.com/huggingface/transformers/blob/6bd511a45a58eb02bd59cf447141a2af428747a4/src/transformers/models/whisper/feature_extraction_whisper.py#L176
+        wav = (wav - np.mean(wav)) / np.sqrt(np.var(wav) + 1e-7)
+        # wav = wav / np.max(np.abs(wav))
 
         # Do transcription
-        segments, _ = self.model.transcribe(audio_waveform, **self.options)
+        segments, _ = self.model.transcribe(wav, **self.options)
         # NOTE: we assume input doesn't exceed model context window
         text = next(segments).text
 
