@@ -28,6 +28,25 @@ nvidia-cudnn-cu12 = "8.*"
 nvidia-cuda-nvrtc-cu12 = "12.1.*"
 nvidia-cublas-cu12 = "12.1.*"
 
+[tool.poetry.group.jupyter]
+optional = true
+
+[tool.poetry.group.jupyter.dependencies]
+ipykernel = "*"
+ipympl = "*"
+ipywidgets = "*"
+
+[tool.poetry.group.train]
+optional = true
+
+[tool.poetry.group.train.dependencies]
+torchaudio = "^2.3.0"
+transformers = "^4.41.1"
+datasets = "^2.19.1"
+evaluate = "^0.4.2"
+torch = "^2.3.0"
+peft = "^0.11.1"
+
 [tool.poe.tasks]
 dev = { cmd = "python dev.py", use_exec = true }
 prod = { cmd = "docker run --rm --gpus all -it -p 5001:5001 nyanplan3-asr", use_exec = true }

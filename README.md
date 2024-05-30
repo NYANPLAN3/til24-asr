@@ -54,3 +54,7 @@ Finally, to submit the image (must be done on GCP unfortunately).
 ```sh
 gcloud ai models upload --region asia-southeast1 --display-name 'nyanplan3-asr' --container-image-uri asia-southeast1-docker.pkg.dev/dsta-angelhack/repository-nyanplan3/nyanplan3-asr:finals --container-health-route /health --container-predict-route /stt --container-ports 5001 --version-aliases default
 ```
+
+```sh
+ct2-transformers-converter --model /workspaces/til24-main/til24-asr/models/experimental-af --output_dir /workspaces/til24-main/til24-asr/models/experimental-af-ct2 --copy_files tokenizer.json preprocessor_config.json --quantization float16
+```
