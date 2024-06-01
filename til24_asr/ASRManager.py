@@ -1,12 +1,16 @@
 """Singleton for ASR processing."""
 
-import io
+from tempfile import NamedTemporaryFile
 
-import librosa
-import numpy as np
+import torch
+from dotenv import load_dotenv
 
-# import whisper
-from faster_whisper import WhisperModel
+# Force import in specific order.
+if True:
+    load_dotenv()
+    from nemo.collections.asr.models.rnnt_bpe_models import EncDecRNNTBPEModel
+
+DEVICE = "cuda"
 
 
 class ASRManager:
@@ -14,51 +18,27 @@ class ASRManager:
 
     def __init__(self):
         """Initialize ASRManager models & stuff."""
-        self.model = WhisperModel(
-            "./models/whisper-large-v3-ct2",
-            device="cuda",
-            # compute_type="int8_float16",
-            compute_type="default",
-            local_files_only=True,
+        model = EncDecRNNTBPEModel.restore_from(
+            "./models/parakeet-tdt-1.1b.nemo",
+            map_location=DEVICE,
         )
-        self.options = dict(
-            language="en",
-            #compression_ratio_threshold=10.0,
-            #log_prob_threshold=-10.0,
-            no_speech_threshold=1.0,
-            beam_size=6,
-            patience=1,
-            without_timestamps=True,
-            initial_prompt=(
-                "Air defense turret, adjust heading to one one five. Deploy surface-to-air missiles to intercept the silver, brown, and grey cargo aircraft."
-                "Engage interceptor jets to intercept an orange commercial aircraft heading three one five. "
-                "Control tower to turrets, deploy EMP on white fighter jet heading one niner five. "
-                "Alfa, Echo, Mike Papa, deploy yellow drone with surface-to-air missiles. Alpha, deploy surface-to-air missiles at heading two five five. "
-                "Alpha, Bravo, Charlie, this is Control Tower. Deploy electromagnetic pulse at heading two six zero towards the black, purple, and orange drone. Target locked. Execute. "
-                "Turret Alpha, engage green and orange commercial aircraft at heading zero niner zero with anti-air artillery. Turret Bravo, standby for further instructions. "
-                "Control tower to air defense turrets, this is Alpha. Set heading to zero niner zero. Target the orange, purple, and black cargo aircraft. Deploy interceptor jets. Repeat, deploy interceptor jets. Over."
-            ),
-        )
+        # NOTE: ValueError: currently only greedy is supported...
+        # sampling: RNNTBPEDecodingConfig = model.cfg.decoding
+        # sampling.strategy = "beam"
+        # sampling.beam.beam_size = 2
+        # sampling.beam.return_best_hypothesis = True
+        # model.change_decoding_strategy(sampling)
+        self.model: EncDecRNNTBPEModel = model.eval()
+        self.model.freeze()
 
+    @torch.inference_mode()
+    @torch.autocast(DEVICE)
     async def transcribe(self, wav: bytes) -> str:
         """Transcribe audio bytes to text."""
-        # Load the audio bytes to byte stream
-        byte_stream = io.BytesIO(wav)
+        with NamedTemporaryFile(suffix='.wav') as f:
+            f.write(wav)
+            f.flush()
+            texts, _ = self.model.transcribe([f.name])
+            text = texts[0]
 
-        # Byte stream to audio waveform
-        # NOTE: This is better than what faster-whisper does if you pass an audio file directly
-        wav, _ = librosa.load(
-            byte_stream, sr=16000, mono=True, res_type="soxr_vhq"
-        )
-
-        # Normalize the audio
-        # https://github.com/huggingface/transformers/blob/6bd511a45a58eb02bd59cf447141a2af428747a4/src/transformers/models/whisper/feature_extraction_whisper.py#L176
-        wav = (wav - np.mean(wav)) / np.sqrt(np.var(wav) + 1e-7)
-        # wav = wav / np.max(np.abs(wav))
-
-        # Do transcription
-        segments, _ = self.model.transcribe(wav, **self.options)
-        # NOTE: we assume input doesn't exceed model context window
-        text = next(segments).text
-
-        return text.strip()
+        return text

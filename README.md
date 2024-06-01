@@ -58,3 +58,8 @@ gcloud ai models upload --region asia-southeast1 --display-name 'nyanplan3-asr' 
 ```sh
 ct2-transformers-converter --model /workspaces/til24-main/til24-asr/models/experimental-af --output_dir /workspaces/til24-main/til24-asr/models/experimental-af-ct2 --copy_files tokenizer.json preprocessor_config.json --quantization float16
 ```
+
+Baseline: 0.9902903959674662
+Baseline no prompt: 0.9815770300209656
+Ft: 0.9900524883648313
+Ft no prompt: 0.9880154045172707
