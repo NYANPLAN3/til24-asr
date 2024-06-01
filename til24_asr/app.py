@@ -46,7 +46,8 @@ def create_app():
             import torch  # type: ignore
 
             debug["torch_version"] = torch.__version__
-            debug["cuda_device"] = str(torch.zeros([10, 10], device="cuda").device)
+            debug["cuda_device"] = str(
+                torch.zeros([10, 10], device="cuda").device)
         except ImportError:
             pass
 
@@ -77,6 +78,7 @@ def create_app():
 
         return re.sub(r"(^|[.!?]\s+)([a-z])", capitalize_match, text)
 
+    # fmt: off
     def process_output(output):
         # Add a space between a digit and a letter / letter and a digit
         output = re.sub(r"(?<=\d)(?=[a-zA-Z])", " ", output)
@@ -89,7 +91,7 @@ def create_app():
 
         # Numbers to words
         output = re.sub(r"(\d+)", lambda m: num2words(int(m.group())), output)
-        
+
         output = re.sub(r"\b(ground)\b", r"brown", output, flags=re.IGNORECASE)
         output = re.sub(r"\b(machine guns)\b", r"machine gun", output, flags=re.IGNORECASE)
         output = re.sub(r"\b(fighter jets)\b", r"fighter jet", output, flags=re.IGNORECASE)
@@ -111,6 +113,7 @@ def create_app():
         output = re.sub(
             r"\b(surface to air)\b", r"surface-to-air", output, flags=re.IGNORECASE
         )
+        output = re.sub(r"\b(e m p)\b", r"EMP", output, flags=re.IGNORECASE)
 
         # US English to UK English
         # output = us_spelling_to_uk(output)
@@ -124,22 +127,14 @@ def create_app():
         output = output[0].upper() + output[1:]
 
         return output
+    # fmt: on
 
     @app.post("/stt")
     async def stt(req: STTRequest):
         """Performs ASR given the filepath of an audio file."""
-        # get base64 encoded string of audio, convert back into bytes.
-
-        preds = []
-        for instance in req.instances:
-            # each is a dict with one key "b64" and the value as a b64 encoded string.
-            wav = base64.b64decode(instance.b64)
-
-            # TODO: Consider padding & stacking audio files for batch processing.
-            text = await asr_manager.transcribe(wav)
-            text = process_output(text)
-            preds.append(text)
-
+        wavs = [base64.b64decode(instance.b64) for instance in req.instances]
+        texts = await asr_manager.transcribe(wavs)
+        preds = [process_output(text) for text in texts]
         return {"predictions": preds}
 
     return app
