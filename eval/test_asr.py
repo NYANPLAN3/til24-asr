@@ -59,6 +59,7 @@ def run_batched(
         _instances = instances[index : index + batch_size]
         response = requests.post(
             "http://localhost:5001/stt",
+            # "http://172.17.0.1:5001/stt",
             data=json.dumps(
                 {
                     "instances": [

@@ -11,22 +11,42 @@ DATASET_PATH = "/workspaces/til24-main/til24-asr/data/til24asr"
 
 NPROC = os.cpu_count()
 
-LORA_CFG = LoraConfig(r=32, lora_alpha=64, target_modules=[
-    "q_proj", "v_proj"], lora_dropout=0.05, bias="none")
+# https://huggingface.co/docs/peft/en/package_reference/lora#peft.LoraConfig
+LORA_CFG = LoraConfig(
+    r=32,
+    lora_alpha=16,
+    target_modules=["q_proj", "v_proj"],
+    lora_dropout=0.05,
+    bias="none",
+    use_rslora=True,
+    init_lora_weights="pissa_niter_16",
+)
+# https://huggingface.co/docs/transformers/v4.41.2/en/main_classes/trainer#transformers.Seq2SeqTrainingArguments
 TRAIN_CFG = Seq2SeqTrainingArguments(
-    output_dir="./runs/train",  # change to a repo name of your choice
-    per_device_train_batch_size=4,
-    gradient_accumulation_steps=2,  # increase by 2x for every 2x decrease in batch size
-    dataloader_num_workers=8,
-    learning_rate=1e-3,
-    warmup_steps=50,
-    num_train_epochs=3,
-    evaluation_strategy="steps",
+    output_dir="./runs/train",
+    eval_strategy="steps",
+    per_device_train_batch_size=16,
+    per_device_eval_batch_size=16,
+    gradient_accumulation_steps=1,
+    learning_rate=1e-5,
+    weight_decay=1e-4,
+    num_train_epochs=64,
+    lr_scheduler_type="cosine",
+    warmup_ratio=0.1,
+    logging_steps=16,
+    save_strategy="steps",
+    save_total_limit=1,
     fp16=True,
-    per_device_eval_batch_size=8,
-    generation_max_length=128,
-    logging_steps=128,
-    # max_steps=100, # only for testing purposes, remove this from your final run :)
+    fp16_full_eval=True,
+    eval_steps=128,
+    save_steps=128,
+    report_to=["tensorboard"],
+    # metric_for_best_model="wer",
+    # greater_is_better=False,
+    dataloader_num_workers=8,
+    dataloader_persistent_workers=False,
+    load_best_model_at_end=True,
+    gradient_checkpointing=True,
     # required as the PeftModel forward doesn't have the signature of the wrapped model's forward
     remove_unused_columns=False,
     label_names=["labels"],  # same reason as above

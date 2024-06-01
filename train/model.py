@@ -6,7 +6,7 @@ from .config import *
 
 def prepare_model():
     model = WhisperForConditionalGeneration.from_pretrained(MODEL_ARCH)
-    model = prepare_model_for_kbit_training(model)
+    # model = prepare_model_for_kbit_training(model)
 
     def _make_inputs_require_grad(module, input, output):
         output.requires_grad_(True)
