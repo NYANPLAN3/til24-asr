@@ -89,7 +89,11 @@ def create_app():
 
         # Numbers to words
         output = re.sub(r"(\d+)", lambda m: num2words(int(m.group())), output)
-
+        
+        output = re.sub(r"\b(ground)\b", r"brown", output, flags=re.IGNORECASE)
+        output = re.sub(r"\b(machine guns)\b", r"machine gun", output, flags=re.IGNORECASE)
+        output = re.sub(r"\b(fighter jets)\b", r"fighter jet", output, flags=re.IGNORECASE)
+        output = re.sub(r"\b(capture)\b", r"catcher", output, flags=re.IGNORECASE)
         output = re.sub(r"\b(nine)\b", r"niner", output, flags=re.IGNORECASE)
         output = re.sub(r"\b(torret)\b", r"turret", output, flags=re.IGNORECASE)
         output = re.sub(r"\b(torrid)\b", r"turret", output, flags=re.IGNORECASE)

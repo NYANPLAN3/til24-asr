@@ -23,18 +23,20 @@ class ASRManager:
         )
         self.options = dict(
             language="en",
-            compression_ratio_threshold=10.0,
-            log_prob_threshold=-10.0,
+            #compression_ratio_threshold=10.0,
+            #log_prob_threshold=-10.0,
             no_speech_threshold=1.0,
-            beam_size=5,
+            beam_size=6,
             patience=1,
             without_timestamps=True,
             initial_prompt=(
+                "Air defense turret, adjust heading to one one five. Deploy surface-to-air missiles to intercept the silver, brown, and grey cargo aircraft."
                 "Engage interceptor jets to intercept an orange commercial aircraft heading three one five. "
                 "Control tower to turrets, deploy EMP on white fighter jet heading one niner five. "
                 "Alfa, Echo, Mike Papa, deploy yellow drone with surface-to-air missiles. Alpha, deploy surface-to-air missiles at heading two five five. "
                 "Alpha, Bravo, Charlie, this is Control Tower. Deploy electromagnetic pulse at heading two six zero towards the black, purple, and orange drone. Target locked. Execute. "
                 "Turret Alpha, engage green and orange commercial aircraft at heading zero niner zero with anti-air artillery. Turret Bravo, standby for further instructions. "
+                "Control tower to air defense turrets, this is Alpha. Set heading to zero niner zero. Target the orange, purple, and black cargo aircraft. Deploy interceptor jets. Repeat, deploy interceptor jets. Over."
             ),
         )
 
