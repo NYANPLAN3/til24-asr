@@ -3,10 +3,10 @@ import os
 from peft import LoraConfig
 from transformers import Seq2SeqTrainingArguments
 
-HOME = os.environ.get("HOME", "/root")
-DATASET_FOLDER = f'{HOME}/advanced/audio'
-JSONL_FILE_PATH = f'{HOME}/advanced/asr.jsonl'
-MODEL_ARCH = "openai/whisper-large-v3"
+HOME = os.getenv("HOME", "/root")
+DATASET_FOLDER = f'{HOME}/.cache/gcsfuse/gcsfuse-file-cache/til-ai-24-advanced/audio'
+JSONL_FILE_PATH = f'{HOME}/.cache/gcsfuse/gcsfuse-file-cache/til-ai-24-advanced/asr.jsonl'
+MODEL_ARCH = "openai/whisper-large-v2"
 DATASET_PATH = "/workspaces/til24-main/til24-asr/data/til24asr"
 
 NPROC = os.cpu_count()
@@ -14,7 +14,7 @@ NPROC = os.cpu_count()
 # https://huggingface.co/docs/peft/en/package_reference/lora#peft.LoraConfig
 LORA_CFG = LoraConfig(
     r=32,
-    lora_alpha=16,
+    lora_alpha=32,
     target_modules=["q_proj", "v_proj"],
     lora_dropout=0.05,
     bias="none",
@@ -25,21 +25,21 @@ LORA_CFG = LoraConfig(
 TRAIN_CFG = Seq2SeqTrainingArguments(
     output_dir="./runs/train",
     eval_strategy="steps",
-    per_device_train_batch_size=16,
-    per_device_eval_batch_size=16,
-    gradient_accumulation_steps=1,
-    learning_rate=1e-5,
+    per_device_train_batch_size=32,
+    per_device_eval_batch_size=32,
+    gradient_accumulation_steps=2,
+    learning_rate=1e-4,
     weight_decay=1e-4,
-    num_train_epochs=64,
+    num_train_epochs=16,
     lr_scheduler_type="cosine",
     warmup_ratio=0.1,
     logging_steps=16,
     save_strategy="steps",
-    save_total_limit=1,
+    # save_total_limit=1,
     fp16=True,
     fp16_full_eval=True,
-    eval_steps=128,
-    save_steps=128,
+    eval_steps=64,
+    save_steps=64,
     report_to=["tensorboard"],
     # metric_for_best_model="wer",
     # greater_is_better=False,

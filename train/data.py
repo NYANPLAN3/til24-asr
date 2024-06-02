@@ -35,8 +35,8 @@ def load_from_jsonl(ds_dir: str, ds_lbl_path: str):
     data = data["train"]
 
     ds = DatasetDict()
-    ds['test'] = data.take(500)
-    ds['train'] = data.skip(500)
+    ds['test'] = data.take(100)
+    ds['train'] = data.skip(100)
     return ds
 
 
