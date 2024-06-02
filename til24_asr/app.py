@@ -117,6 +117,7 @@ def create_app():
         o = re.sub(r"\b(great)\b", r"red", o, flags=re.IGNORECASE)
         o = re.sub(r"\b(grate)\b", r"red", o, flags=re.IGNORECASE)
         o = re.sub(r"\b(rate)\b", r"red", o, flags=re.IGNORECASE)
+        o = re.sub(r"\b(e m p)\b", r"EMP", o, flags=re.IGNORECASE)
 
         # US English to UK English
         # output = us_spelling_to_uk(output)

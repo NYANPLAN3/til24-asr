@@ -19,31 +19,38 @@ if True:
 DEVICE = "cuda"
 
 
+# https://docs.nvidia.com/nemo-framework/user-guide/latest/nemotoolkit/asr/configs.html
 class ASRManager:
     """ASRManager."""
 
     def __init__(self):
         """Initialize ASRManager models & stuff."""
-        # model = EncDecRNNTBPEModel.restore_from(
-        #     "./models/parakeet-tdt-1.1b.nemo",
-        #     map_location=DEVICE,
-        # )
+        self._init_parakeet()
+        self.model.eval().freeze()
+
+    def _init_canary(self):
+        assert False
+        model = EncDecMultiTaskModel.from_pretrained(
+            'nvidia/canary-1b', map_location=DEVICE)
+        sampling: MultiTaskDecodingConfig = model.cfg.decoding
+        sampling.beam.beam_size = 1
+        model.change_decoding_strategy(sampling)
+        self.model: EncDecMultiTaskModel = model
+        self.is_rnnt = False
+
+    def _init_parakeet(self):
+        model = EncDecRNNTBPEModel.restore_from(
+            "./models/parakeet-tdt-1.1b.nemo",
+            map_location=DEVICE,
+        )
         # NOTE: ValueError: currently only greedy is supported...
         # sampling: RNNTBPEDecodingConfig = model.cfg.decoding
         # sampling.strategy = "beam"
         # sampling.beam.beam_size = 2
         # sampling.beam.return_best_hypothesis = True
         # model.change_decoding_strategy(sampling)
-        # self.model: EncDecRNNTBPEModel = model.eval()
-
-        model = EncDecMultiTaskModel.from_pretrained(
-            'nvidia/canary-1b', map_location=DEVICE)
-        # https://docs.nvidia.com/nemo-framework/user-guide/latest/nemotoolkit/asr/configs.html
-        sampling: MultiTaskDecodingConfig = model.cfg.decoding
-        sampling.beam.beam_size = 1
-        model.change_decoding_strategy(sampling)
-        self.model: EncDecMultiTaskModel = model.eval()
-        self.model.freeze()
+        self.model: EncDecRNNTBPEModel = model
+        self.is_rnnt = True
 
     @torch.inference_mode()
     @torch.autocast(DEVICE)
@@ -54,6 +61,10 @@ class ASRManager:
                 NamedTemporaryFile(suffix=".wav")) for _ in wavs]
             for f, w in zip(files, wavs):
                 f.write(w)
-            texts = self.model.transcribe(
-                [f.name for f in files], batch_size=1)
+            if self.is_rnnt:
+                texts, _ = self.model.transcribe(
+                    [f.name for f in files], batch_size=len(wavs))
+            else:
+                texts = self.model.transcribe(
+                    [f.name for f in files], batch_size=1)
         return texts
