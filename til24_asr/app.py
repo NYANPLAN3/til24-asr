@@ -111,7 +111,10 @@ def create_app():
         o = re.sub(r"\b(hostel)\b", r"hostile", o, flags=re.IGNORECASE)
         o = re.sub(r"\b(Heading)\b", r"heading", o)
         o = re.sub(r"\b(anterior)\b", r"anti-air", o, flags=re.IGNORECASE)
+        o = re.sub(r"\b(standby)\b", r"stand by", o, flags=re.IGNORECASE)
+        o = re.sub(r"\b(anti-rr)\b", r"anti-air", o, flags=re.IGNORECASE)
         o = re.sub(r"\b(anti air)\b", r"anti-air", o, flags=re.IGNORECASE)
+        o = re.sub(r"\b(on to)\b", r"onto", o, flags=re.IGNORECASE)
         o = re.sub(r"\b(surface to air)\b", r"surface-to-air", o, flags=re.IGNORECASE)
         # idk
         o = re.sub(r"\b(great)\b", r"red", o, flags=re.IGNORECASE)
