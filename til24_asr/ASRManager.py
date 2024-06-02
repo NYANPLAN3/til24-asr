@@ -15,18 +15,19 @@ class ASRManager:
     def __init__(self):
         """Initialize ASRManager models & stuff."""
         self.model = WhisperModel(
-            #./models/whisper-large-v3-ct2",
-            "large-v2",
+            # ./models/whisper-large-v3-ct2",
+            # "large-v2",
+            "./models/whisperv2-exp2-ct2",
             device="cuda",
             # compute_type="int8_float16",
             compute_type="default",
-            #local_files_only=True,
+            local_files_only=True,
         )
         self.options = dict(
             language="en",
-            #compression_ratio_threshold=10.0,
-            #log_prob_threshold=-10.0,
-            #no_speech_threshold=0.6,
+            # compression_ratio_threshold=10.0,
+            # log_prob_threshold=-10.0,
+            # no_speech_threshold=0.6,
             beam_size=5,
             patience=1,
             without_timestamps=True,

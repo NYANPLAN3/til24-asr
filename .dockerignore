@@ -8,4 +8,5 @@ results
 models
 #!models/large-v3.pt
 #!models/Systran_faster-distil-whisper-large-v3
-!models/whisper-large-v3-ct2
+#!models/whisper-large-v3-ct2
+!models/whisperv2-exp2-ct2
