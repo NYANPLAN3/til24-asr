@@ -29,14 +29,15 @@ def main():
     instances = []
 
     with open(input_dir / "asr.jsonl", "r") as f:
-        for line in f:
+        for line in tqdm(f.readlines()):
             if line.strip() == "":
                 continue
             instance = json.loads(line.strip())
             with open(input_dir / "audio" / instance["audio"], "rb") as file:
                 audio_bytes = file.read()
                 instances.append(
-                    {**instance, "b64": base64.b64encode(audio_bytes).decode("ascii")}
+                    {**instance,
+                        "b64": base64.b64encode(audio_bytes).decode("ascii")}
                 )
 
     results = run_batched(instances)
@@ -56,7 +57,7 @@ def run_batched(
     # split into batches
     results = []
     for index in tqdm(range(0, len(instances), batch_size)):
-        _instances = instances[index : index + batch_size]
+        _instances = instances[index: index + batch_size]
         response = requests.post(
             "http://localhost:5001/stt",
             # "http://172.17.0.1:5001/stt",
@@ -71,12 +72,16 @@ def run_batched(
         )
         _results = response.json()["predictions"]
         for i in range(len(_instances)):
-            tqdm.write(f'Pred: {_results[i]}, True: {_instances[i]["transcript"]}')
+            pred, gt = _results[i], _instances[i]["transcript"]
+            score = asr_eval([gt], [pred])
+            if score < 0.995:
+                tqdm.write(f'{score:.3f} Pred: {pred}, True: {gt}')
             results.append(
                 {
                     "key": _instances[i]["key"],
-                    "transcript": _instances[i]["transcript"],
-                    "prediction": _results[i],
+                    "transcript": gt,
+                    "prediction": pred,
+                    "score": score,
                 }
             )
     return results
