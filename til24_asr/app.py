@@ -72,11 +72,11 @@ def create_app():
         return checker.get_text()
     """
 
-    def capitalize_start_of_sentence(text):
+    """def capitalize_start_of_sentence(text):
         def capitalize_match(match):
             return match.group(1) + match.group(2).upper()
 
-        return re.sub(r"(^|[.!?]\s+)([a-z])", capitalize_match, text)
+        return re.sub(r"(^|[.!?]\s+)([a-z])", capitalize_match, text)"""
 
     # fmt: off
     def process_output(o):
@@ -97,8 +97,6 @@ def create_app():
         o = re.sub(r"(\d+)", lambda m: num2words(int(m.group())), o)
 
         o = re.sub(r"\b(ground)\b", r"brown", o, flags=re.IGNORECASE)
-        o = re.sub(r"\b(machine guns)\b", r"machine gun", o, flags=re.IGNORECASE)
-        o = re.sub(r"\b(fighter jets)\b", r"fighter jet", o, flags=re.IGNORECASE)
         o = re.sub(r"\b(capture)\b", r"catcher", o, flags=re.IGNORECASE)
         o = re.sub(r"\b(nine)\b", r"niner", o, flags=re.IGNORECASE)
         o = re.sub(r"\b(torret)\b", r"turret", o, flags=re.IGNORECASE)
@@ -111,10 +109,9 @@ def create_app():
         o = re.sub(r"\b(hostel)\b", r"hostile", o, flags=re.IGNORECASE)
         o = re.sub(r"\b(Heading)\b", r"heading", o)
         o = re.sub(r"\b(anterior)\b", r"anti-air", o, flags=re.IGNORECASE)
-        o = re.sub(r"\b(standby)\b", r"stand by", o, flags=re.IGNORECASE)
         o = re.sub(r"\b(anti-rr)\b", r"anti-air", o, flags=re.IGNORECASE)
         o = re.sub(r"\b(anti air)\b", r"anti-air", o, flags=re.IGNORECASE)
-        o = re.sub(r"\b(on to)\b", r"onto", o, flags=re.IGNORECASE)
+        o = re.sub(r"\b(black white)\b", r"black light", o, flags=re.IGNORECASE)
         o = re.sub(r"\b(surface to air)\b", r"surface-to-air", o, flags=re.IGNORECASE)
         # idk
         o = re.sub(r"\b(great)\b", r"red", o, flags=re.IGNORECASE)
@@ -123,9 +120,6 @@ def create_app():
 
         # US English to UK English
         # output = us_spelling_to_uk(output)
-
-        # Capitalize first letter
-        o = capitalize_start_of_sentence(o)
 
         # Remove extra spaces
         o = re.sub(r" +", " ", o)

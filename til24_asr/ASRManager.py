@@ -32,10 +32,11 @@ class ASRManager:
             without_timestamps=True,
             initial_prompt=(
                 "Air defense turret, adjust heading to two one five. Deploy surface-to-air missiles to intercept the silver, brown, and grey cargo aircraft."
+                "Deploy anti-air artillery, heading one two zero, engage black light aircraft."
                 "Set heading to zero seven five, target the red and yellow commercial aircraft, and deploy electromagnetic pulse."
                 "Engage interceptor jets to intercept an orange commercial aircraft heading three one five. "
                 "Control tower to turrets, deploy EMP tool on white fighter jet heading one niner five. "
-                "Alfa, Echo, Mike Papa, deploy yellow drone with surface-to-air missiles. Alpha, deploy surface-to-air missiles at heading two five five. "
+                "Deploy anti-air artillery to heading zero niner five. Engage grey, purple, and white light aircraft."
                 "Alpha, Bravo, Charlie, this is Control Tower. Deploy electromagnetic pulse at heading one six zero towards the black, purple, and orange drone. Target locked. Execute. "
                 "Turret Alpha, engage green and orange commercial aircraft at heading two niner zero with anti-air artillery. Turret Bravo, standby for further instructions. "
                 "Control tower to air defense turrets, this is Alpha. Set heading to two niner zero. Target the orange, purple, and black cargo aircraft. Deploy interceptor jets. Repeat, deploy interceptor jets. Over."
