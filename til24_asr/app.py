@@ -21,7 +21,7 @@ __all__ = ["create_app"]
 
 load_dotenv()
 
-setup_logging
+setup_logging()
 log = logging.getLogger(__name__)
 
 
@@ -146,4 +146,5 @@ def create_app():
 
         return {"predictions": preds}
 
+    log.info("ASR App Ready.")
     return app

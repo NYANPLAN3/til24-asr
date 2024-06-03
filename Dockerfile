@@ -34,4 +34,4 @@ COPY --link til24_asr ./til24_asr
 
 EXPOSE 5001
 # uvicorn --host=0.0.0.0 --port=5001 --factory til24_asr:create_app
-CMD ["uvicorn", "--host=0.0.0.0", "--port=5001", "--factory", "til24_asr:create_app"]
+CMD ["uvicorn", "--log-level=warning", "--host=0.0.0.0", "--port=5001", "--factory", "til24_asr:create_app"]
